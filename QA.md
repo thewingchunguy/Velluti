@@ -16,3 +16,11 @@ Automated checks:
 - Relative links and referenced assets checked for existence.
 
 Not verified: real Shopify connection, payments, shipping, tax, refunds, live subscriptions, reviews provider, physical devices, comprehensive screen-reader audit or Lighthouse. Follow the launch checklist in README.md. Preview stays noindex.
+
+## Second development pass
+
+20 Node tests pass against the shared commerce adapter (`node --test test-commerce.cjs`). Coverage includes current AUD pricing, variant identity, sold-out stock, quantity limits, subscriptions/bundles rejection, cart line/count reconciliation, foreign currencies, checkout host validation, API errors, network failures and preview guards. Tests use mocked Shopify responses; a real store has not been connected.
+
+Browser checks pass for gallery next/previous/keyboard navigation, selected image zoom, 2-item/$100 bag, checkout preview guard, empty state after removal, mobile menu navigation into the journal, review deep-link expansion and the newsletter's unconfigured state. Gallery/commerce UI was checked at 320px, 390px, 768px and 1440px as relevant; document widths matched viewport widths on the checked pages. No physical-device or full accessibility/performance audit is claimed.
+
+Static validation passed for relative files/links, anchor targets, unique IDs and one H1 on each of home, product and journal pages. Mobile and desktop compositions were visually reviewed. WebP imagery, intrinsic image dimensions, lazy loading below the fold and direct font stylesheet links are present.

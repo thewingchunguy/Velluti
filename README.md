@@ -1,41 +1,51 @@
-# Velluti HTML storefront
+# Velluti — HTML storefront
 
-Plain HTML, CSS and JavaScript. No package installation or build step required. Serve `dist/` with any static web server (`python3 -m http.server 4173 --directory dist`). Open index.html for home and product.html for the product detail page. Local file opening also works for browsing; HTTP is required for integration tests.
+Italian-inspired men's grooming. Plain HTML, CSS and JavaScript with no build step or application dependencies.
 
-## Status
-Development preview, not ready for live sales. No prototype source was supplied; the workspace was empty. The supplied screenshot informed the visual direction. All created files are separate in this directory.
+## Run and test
 
-Implemented: responsive homepage and product page; accessible native dialog bag; localStorage bag persistence with graceful storage failure handling; quantity updates, removal, AUD totals; product gallery modes and campaign modal; native details accordions; reduced-motion support; focus indicators; semantic navigation; consent-aware subscription form; Shopify Storefront cartCreate checkout adapter.
+```sh
+python3 -m http.server 4173 --directory dist
+node --test test-commerce.cjs
+```
 
-The checkout follows Shopify's documented cartCreate response and redirects to its checkoutUrl: https://shopify.dev/docs/api/storefront/latest/mutations/cartCreate
+Open http://localhost:4173 . Use a modern browser and Node 20+ for the test suite. `index.html`, `product.html` and `journal.html` are the entry pages. Serve only `dist/` to keep development files outside the document root.
 
-## Configure integrations
-Edit dist/config.js. Only PUBLIC Storefront tokens may be used in this browser-delivered file. Never expose Shopify Admin tokens or private Storefront tokens.
-- shopDomain: your *.myshopify.com domain.
-- storefrontToken: a public Storefront API token with required product/cart permissions.
-- variantId: the published Shopify ProductVariant GID for the confirmed product.
-- apiVersion: 2026-10; review version support before future launches.
-- salesEnabled: keep false until all launch tests pass.
-- subscriptionEndpoint: HTTPS POST backend accepting {email, consent, source}. Must implement origin restrictions, validation, rate limits, anti-abuse controls, consent records, double opt-in and unsubscribe. No email is submitted when absent.
+## Current status
 
-Shopify is authoritative for price, inventory, taxes, shipping and payments. Current $50 local totals are placeholders. Before enabling sales, replace local hard-coded product data with Shopify product queries (including availability and AUD contextual price), reconcile the displayed total with returned cart costs, handle sold-out/unpublished variants, and test production permissions/CORS.
+Private development preview: https://velluti-grooming-atelier.brawnybay19.chatgpt.site . GitHub: https://github.com/thewingchunguy/Velluti . Products and prices remain concepts; live orders are disabled.
 
-## Required before live launch
-- Confirm product identity, formula/INCI, net weight, verified performance, safety/application instructions, final packaging and photography.
-- Configure Shopify product, inventory, AUD market/prices, tax settings, shipping zones/rates, fulfilment and payment provider.
-- Run test payment, decline, refund, delivery and tax scenarios, plus inventory and price changes. Current adapter has not been tested against a real Shopify store.
-- Publish approved privacy, terms, shipping and returns policies plus business/contact details. Current policy dialogs are development notices only.
-- Connect email backend; test consent and unsubscribe end to end.
-- Integrate genuine reviews from a verified review provider. The current review section is explicitly empty; no review submission is implemented.
-- Replace illustrative assets with approved final assets. Campaign imagery is AI-generated; garden artwork is AI-generated and the packaging rendering is an original code illustration. Botanicals do not imply ingredients.
-- Set production canonical URL, Open Graph metadata, favicon, sitemap and verified Product structured data. Remove noindex only after approval for public launch. No fabricated availability or ratings are emitted.
-- Self-host approved fonts if required; current Google Fonts request has system fallbacks. Confirm font/privacy requirements and final Lighthouse/Core Web Vitals audits.
-- Complete screen-reader, keyboard and physical-device testing. See QA.md for checks actually performed.
-- Set custom domain, monitoring, error reporting and suitable static-host security headers/CSP.
+The supplied screenshot informed the direction. The initial workspace was empty, so no prototype source was replaced. The first implementation and subsequent improvements are preserved in Git history.
 
-## Source control
-GitHub source repository: https://github.com/thewingchunguy/Velluti . A separate Sites source repository is used for private preview deployment. The storefront remains a development preview; GitHub publication does not enable live checkout.
+Built: responsive home, product and journal pages; original illustrative campaign and packshot imagery; garden watercolour; mobile menu; keyboard image gallery, thumbnails and zoom; persistent bag with AUD totals and quantities; FAQ; empty customer-review section; consent-based newsletter form; page metadata and favicon. No testimonials or certifications are invented.
 
-## Design references and assets
-Fresh Supps informed the shopping progression (clear product CTA, benefit breakdown, storytelling, bag): https://freshsupps.com . Velluti branding, artwork and layout are original.
-Generated campaign prompt and provenance: ASSETS.md.
+## Shopify connection
+
+Configure `dist/config.js` with your shopDomain (`*.myshopify.com`), PUBLIC storefrontToken, ProductVariant GID in variantId, and the supported Storefront apiVersion. Never put Shopify Admin credentials or private tokens in frontend files. Product listing read access is required. Keep salesEnabled false until the launch checklist is complete.
+
+`dist/commerce.js` reads the variant in Australian market context, including current AUD price, availability and quantity rules. When salesEnabled is true, product prices replace the $50 placeholder. Unavailable or unconfirmed variants cannot be added. The adapter supports one standard, single-purchase variant; subscriptions and component bundles are deliberately blocked.
+
+Checkout rechecks availability and current price, then creates a Shopify cart and reads its actual subtotal. The visitor reviews that total before a second click follows the returned Shopify checkout URL. Adjusted quantities, wrong merchandise, foreign currency and unapproved checkout hosts are rejected. Bag changes invalidate the quote. Shopify remains authoritative for final inventory, discounts, shipping, taxes and payment.
+
+If your Shopify checkout uses a custom domain, explicitly add its hostname to checkoutHostnames after verifying it belongs to your Shopify store. The *.myshopify.com shop hostname is allowed by default. URLs must use HTTPS. The bag remains on the device after checkout because there is no order-confirmation integration to safely clear it.
+
+Official references: https://shopify.dev/docs/api/storefront/latest/queries/node , https://shopify.dev/docs/api/storefront/latest/objects/ProductVariant , https://shopify.dev/docs/api/storefront/latest/mutations/cartCreate .
+
+## Email subscriptions
+
+Set subscriptionEndpoint to your HTTPS backend. The form requires an email and checked consent; no data is sent while the endpoint is absent. The endpoint receives `{email, consent: true, source: 'velluti-storefront'}` and must implement validation, origin checks, rate limits, double opt-in, consent records, unsubscribe and the applicable privacy requirements. API keys belong on that backend, never in this public file. Test the provider's response contract before launch.
+
+## Before live sales
+
+- Supply approved product name, INCI ingredient list, net contents, usage and safety directions, verified performance and manufacturing origin. Botanical images do not imply ingredients. Current formula descriptions are development goals.
+- Approve final packaging and real product photography. All images are concept art; see ASSETS.md.
+- Configure Shopify product publication, price, inventory, AUD market, payment provider, tax, shipping regions/rates and fulfilment.
+- Verify CORS/public-token permissions and run real-store tests: successful and declined test payments, inventory changes, price changes, quantities, discounts, shipping, taxes, cancellations and refunds. Mock tests are not a substitute.
+- Publish approved privacy, terms, shipping and return policies plus business/contact details. The current dialogs are development notices, not final legal documents. Review preview labels/copy before enabling sales.
+- Connect and test the email backend, consent, double opt-in and unsubscribe.
+- Integrate genuine customer reviews with an appropriate moderation/provider flow. Current reviews are explicitly empty, with no review submission backend.
+- Set production domain/metadata, sitemap and truthful product structured data. Keep `noindex` and the robots disallow in place until public launch is approved. Never publish fake ratings or availability.
+- Complete physical-device, screen-reader, contrast and Lighthouse/Core Web Vitals audits. Images have dimensions, WebP variants and below-fold lazy loading. Google Fonts has system fallbacks; decide whether to self-host approved fonts.
+- Configure hosting security headers, monitoring and operational support. For a custom static host, the document root is `dist/`. The `.openai/hosting.json` retains the existing private Sites deployment identity.
+
+See QA.md for verification actually performed and remaining limits. Reference inspiration: https://freshsupps.com ; Velluti design and copy are original.
