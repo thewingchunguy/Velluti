@@ -6,10 +6,10 @@ Italian-inspired men's grooming. Plain HTML, CSS and JavaScript with no build st
 
 ```sh
 python3 -m http.server 4173 --directory dist
-node --test test-commerce.cjs
+node --test test-commerce.cjs test-catalog.cjs
 ```
 
-Open http://localhost:4173 . Use a modern browser and Node 20+ for the test suite. `index.html`, `product.html` and `journal.html` are the entry pages. Serve only `dist/` to keep development files outside the document root.
+Open http://localhost:4173 . Use a modern browser and Node 20+ for the test suite. `index.html`, `collection.html`, `product.html?product=styling-creme` and `journal.html` are the entry pages. Serve only `dist/` to keep development files outside the document root.
 
 ## Current status
 
@@ -17,19 +17,21 @@ Private development preview: https://velluti-grooming-atelier.brawnybay19.chatgp
 
 The supplied screenshot informed the direction. The initial workspace was empty, so no prototype source was replaced. The first implementation and subsequent improvements are preserved in Git history.
 
-Built: responsive home, product and journal pages; original illustrative campaign and packshot imagery; garden watercolour; mobile menu; keyboard image gallery, thumbnails and zoom; persistent bag with AUD totals and quantities; FAQ; empty customer-review section; consent-based newsletter form; page metadata and favicon. No testimonials or certifications are invented.
+Built: a product-first homepage with four placeholder cards and quick add; a dedicated filtered/sorted collection page; individual product detail states; a persistent mixed-product bag; a build-your-ritual selector; mobile navigation; keyboard gallery and zoom; editorial journal; brand storytelling, FAQs and newsletter form. All four products are AUD $50. No invented discounts, customer reviews, ingredients or certifications.
 
-## Shopify connection
+## Replace the four placeholders
 
-Configure `dist/config.js` with your shopDomain (`*.myshopify.com`), PUBLIC storefrontToken, ProductVariant GID in variantId, and the supported Storefront apiVersion. Never put Shopify Admin credentials or private tokens in frontend files. Product listing read access is required. Keep salesEnabled false until the launch checklist is complete.
+`dist/catalog.js` is the editable source for product IDs, names, category, price, imagery and placeholder descriptions. Current concepts: The Styling Crème, The Texture Paste, The Shaping Pomade and The Finishing Crème. They are website placeholders, not verified products or performance claims.
 
-`dist/commerce.js` reads the variant in Australian market context, including current AUD price, availability and quantity rules. When salesEnabled is true, product prices replace the $50 placeholder. Unavailable or unconfirmed variants cannot be added. The adapter supports one standard, single-purchase variant; subscriptions and component bundles are deliberately blocked.
+Each product uses `product.html?product=<id>`. The same catalog powers the bag and ritual builder. The builder adds one of each selected product at its normal placeholder price, with no discount. The bag is saved as a product/quantity map under `velluti-bag-v2`; old single-product bag quantities migrate to The Styling Crème.
 
-Checkout rechecks availability and current price, then creates a Shopify cart and reads its actual subtotal. The visitor reviews that total before a second click follows the returned Shopify checkout URL. Adjusted quantities, wrong merchandise, foreign currency and unapproved checkout hosts are rejected. Bag changes invalidate the quote. Shopify remains authoritative for final inventory, discounts, shipping, taxes and payment.
+The four original SVG packaging studies are editable assets in `dist/assets/product-01.svg` through `product-04.svg`. Final names, imagery and product information can be replaced without changing the layout. The placeholder catalog deliberately keeps checkout unavailable even if a production configuration flag is changed.
 
-If your Shopify checkout uses a custom domain, explicitly add its hostname to checkoutHostnames after verifying it belongs to your Shopify store. The *.myshopify.com shop hostname is allowed by default. URLs must use HTTPS. The bag remains on the device after checkout because there is no order-confirmation integration to safely clear it.
+## Future Shopify connection
 
-Official references: https://shopify.dev/docs/api/storefront/latest/queries/node , https://shopify.dev/docs/api/storefront/latest/objects/ProductVariant , https://shopify.dev/docs/api/storefront/latest/mutations/cartCreate .
+The previously developed single-variant Shopify adapter remains preserved in `dist/commerce.js` with its 20 tests. It reads current AUD variant pricing/availability and reconciles a single-product cart before following a validated checkout URL. It is **not wired to the new four-placeholder bag**. Before enabling live sales, implement and test a multi-variant catalog/cart connection using the final Shopify products. Do not turn on sales for these placeholders.
+
+`dist/config.js` preserves the future Shopify configuration fields and current subscription endpoint setting. Only PUBLIC Storefront credentials may ever be placed in browser code. Never expose Shopify Admin or private Storefront tokens. Official API references: https://shopify.dev/docs/api/storefront/latest/queries/node , https://shopify.dev/docs/api/storefront/latest/objects/ProductVariant , https://shopify.dev/docs/api/storefront/latest/mutations/cartCreate .
 
 ## Email subscriptions
 

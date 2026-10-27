@@ -12,3 +12,7 @@ Built-in imagegen tool. Saved asset: dist/assets/packshot.webp (1024 × 1024). R
 Prompt: Create a square high-end studio product photograph for the exact Velluti styling jar shown in the reference. Preserve the low wide dark brown glass jar, espresso cylindrical lid, ivory label, widely spaced serif VELLUTI, horizontal rule and small STYLING CREME. Single closed jar front facing on warm pale travertine, seamless warm ivory backdrop, Tuscan afternoon side light and sculptural shadow to the right. Centre 55% of width. Realistic glass reflections and paper texture. No botanicals, extra objects, certifications, size or ingredient claims.
 
 WebP derivatives of the campaign and garden reduce page payload; original JPEG assets remain preserved in source.
+
+
+# Four-product placeholder studies
+`dist/assets/product-01.svg` through `product-04.svg` are original code-native vector packaging studies. They use the same Velluti identity with cream, olive, espresso and terracotta backdrops. All labels are placeholder names. They do not imply actual final packaging, ingredients, size or certifications.

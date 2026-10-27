@@ -24,3 +24,12 @@ Not verified: real Shopify connection, payments, shipping, tax, refunds, live su
 Browser checks pass for gallery next/previous/keyboard navigation, selected image zoom, 2-item/$100 bag, checkout preview guard, empty state after removal, mobile menu navigation into the journal, review deep-link expansion and the newsletter's unconfigured state. Gallery/commerce UI was checked at 320px, 390px, 768px and 1440px as relevant; document widths matched viewport widths on the checked pages. No physical-device or full accessibility/performance audit is claimed.
 
 Static validation passed for relative files/links, anchor targets, unique IDs and one H1 on each of home, product and journal pages. Mobile and desktop compositions were visually reviewed. WebP imagery, intrinsic image dimensions, lazy loading below the fold and direct font stylesheet links are present.
+
+
+## Four-placeholder collection pass
+
+30 Node tests pass: the existing 20 commerce-adapter tests plus 10 catalog/bag tests. New coverage verifies four unique products at $50, distinct product lines, merged quantities, independent removal, per-product caps, invalid stored data, four-item/$200 totals, legacy migration and serialization.
+
+Browser verified: adding two different products produces separate lines/$100; incrementing only the texture paste produces $150; removing only the styling crème leaves the texture paste and $100; reload preserves the result. Selecting all four ritual products shows $200 and adds all four correct lines. Placeholder checkout remains blocked. The Shaping Pomade URL loads the correct title/artwork and three related products. Collection category filtering shows two texture/shape products, reset shows four, and A–Z sorting changes card order correctly.
+
+Desktop 1440px product lineup and mobile 390px collection were visually reviewed. All products/names/prices and packaging are labelled as placeholders. Real checkout remains disconnected for this four-product preview, as requested. The existing single-variant adapter is retained but is not the four-product storefront's checkout implementation.
